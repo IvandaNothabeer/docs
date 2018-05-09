@@ -166,6 +166,8 @@ FLUSH PRIVILEGES;
 
     Remember the password for the `seat` database user as we will need it later to configure SeAT.
 
+Exit MySQL with `\q`
+
 ### PHP
 Since SeAT is a PHP application, we will to install php packages.
 For now, we're relying on PHP 7.1 due to issues with Laravel on PHP 7.2 on some methods.
@@ -272,10 +274,10 @@ Update it with the information you got earlier in the installation process. Refe
 
 Now, we will publish assets and seed the SeAT database. Let's do this with the following commands :
 
-- `sudo -H -u seat bash -c 'php /var/www/seatartisan vendor:publish --force --all'` this will publish all package assets, including horizon
-- `sudo -H -u seat bash -c 'php /var/www/seatartisan migrate'` it will generate SeAT database structure
-- `sudo -H -u seat bash -c 'php /var/www/seatartisan db:seed --class=Seat\\Services\\database\\seeds\\ScheduleSeeder'` this will seed the scheduling table used for jobs
-- `sudo -H -u seat bash -c 'php /var/www/seatartisan eve:update-sde'` it will download latest SDE data
+- `sudo -H -u seat bash -c 'php /var/www/seat/artisan vendor:publish --force --all'` this will publish all package assets, including horizon
+- `sudo -H -u seat bash -c 'php /var/www/seat/artisan migrate'` it will generate SeAT database structure
+- `sudo -H -u seat bash -c 'php /var/www/seat/artisan db:seed --class=Seat\\Services\\database\\seeds\\ScheduleSeeder'` this will seed the scheduling table used for jobs
+- `sudo -H -u seat bash -c 'php /var/www/seat/artisan eve:update-sde'` it will download latest SDE data
 
 ### Supervisor
 SeAT relies on supervisor in order to keep the Horizon process up. Horizon is the new queue backend in SeAT 3.0.
@@ -344,7 +346,7 @@ Next, update the newly created pool file at `/etc/php/7.1/fpm/pool.d/seat.conf` 
 | group = www-data | group = seat |
 | listen = /run/php/php7.1-fpm.sock | listen = /run/php/seat.sock |
 
-Once done, you can create a new configuration file into nginx to server SeAT called `/etc/nginx/site-availables/seat` 
+Once done, you can create a new configuration file into nginx to server SeAT called `/etc/nginx/sites-available/seat` 
 
 And put the content bellow inside
 
@@ -377,7 +379,7 @@ server {
 Let's symlink to the active config and drop the default one :
 
 ```bash
-ln -s /etc/nginx/sites-availabe/seat /etc/nginx/sites-enabled/seat
+ln -s /etc/nginx/sites-available/seat /etc/nginx/sites-enabled/seat
 rm /etc/nginx/sites-enabled/default
 ```
 
